@@ -37,7 +37,6 @@ app.use(express.static(path.join(__dirname, '/client/build')));
 
 // add photo routes
 app.use('/api', require('./routes/photos.routes'));
-app.use('/api', require('./routes/voters.routes'))
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));

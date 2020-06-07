@@ -50,7 +50,7 @@ export const addPhotoRequest = (data) => {
       dispatch(addPhoto(res.data));
       dispatch(endRequest({ name: ADD_PHOTO }));
 
-    } catch (e) {
+    } catch(e) {
       dispatch(errorRequest({ name: ADD_PHOTO, error: e.message }));
     }
 
@@ -68,7 +68,7 @@ export const loadPhotosRequest = () => {
       dispatch(loadPhotos(res.data));
       dispatch(endRequest({ name: LOAD_PHOTOS }));
 
-    } catch (e) {
+    } catch(e) {
       dispatch(errorRequest({ name: LOAD_PHOTOS, error: e.message }));
     }
 
@@ -80,13 +80,12 @@ export const votePhotoRequest = (id) => {
 
     try {
       const votes = JSON.parse(localStorage.getItem('votes')) || [];
-      if (votes && votes.indexOf(id) !== -1) return false;
+      if(votes && votes.indexOf(id) !== -1) return false;
       await axios.put(`${API_URL}/photos/vote/${id}`);
-      await axios.post(`${API_URL}/voters/${id}`)
       votes.push(id);
       localStorage.setItem('votes', JSON.stringify(votes));
       dispatch(votePhoto(id));
-    } catch (e) {
+    } catch(e) {
       console.error(e);
     }
 
@@ -110,13 +109,13 @@ export default function reducer(statePart = initialState, action = {}) {
     case LOAD_PHOTOS:
       return { ...statePart, data: [...action.payload] };
     case VOTE_PHOTO:
-      return { ...statePart, data: statePart.data.map(photo => (photo._id === action.payload) ? { ...photo, votes: photo.votes + 1 } : photo) };
+      return { ...statePart, data: statePart.data.map(photo => (photo._id === action.payload) ? { ...photo, votes: photo.votes+1 } : photo) };
     case START_REQUEST:
-      return { ...statePart, requests: { ...statePart.requests, [action.payload.name]: { pending: true, error: null, success: false } } };
+      return { ...statePart, requests: {...statePart.requests, [action.payload.name]: { pending: true, error: null, success: false }} };
     case END_REQUEST:
-      return { ...statePart, requests: { ...statePart.requests, [action.payload.name]: { pending: false, error: null, success: true } } };
+      return { ...statePart, requests: { ...statePart.requests, [action.payload.name]: { pending: false, error: null, success: true }} };
     case ERROR_REQUEST:
-      return { ...statePart, requests: { ...statePart.requests, [action.payload.name]: { pending: false, error: action.payload.message, success: false } } };
+      return { ...statePart, requests: { ...statePart.requests, [action.payload.name]: { pending: false, error: action.payload.message, success: false }} };
     default:
       return statePart;
   }
